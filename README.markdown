@@ -14,6 +14,8 @@ This `LoaderEx` project is designed to help fill some
 of those gaps. Presently, it provides a `SQLiteCursorLoader`,
 offering the same basic concept as `CursorLoader`, but
 for use with a `SQLiteDatabase` instead of a `ContentProvider`.
+It also supplies some boilerplate `AsyncTasks` to handle
+database inserts and deletes in the background. 
 
 This is packaged as an Android library project, though a simple
 JAR is also available from the Downloads section of this
@@ -23,8 +25,8 @@ Library), please use the JAR &mdash; put it in your project's
 `libs/` directory and, if you are using Eclipse, add it to
 your build path.
 
-Usage
------
+Usage: SQLiteCursorLoader
+-------------------------
 Generally speaking, you use `SQLiteCursorLoader` in the same
 fashion as you would use `CursorLoader` &mdash; by having your
 activity implement `LoaderManager.LoaderCallbacks<Cursor>`
@@ -70,6 +72,50 @@ other sources. Just override `buildCursor()` and have it
 return the `Cursor` &mdash; this method is called on a
 background thread and therefore is not time-limited.
 
+Usage: SQLite*Task
+------------------
+`SQLiteInsertTask` and `SQLiteDeleteTask` are also supplied
+in this library. These simply perform `insert()` and `delete()`
+calls on a `SQLiteDatabase` inside an `AsyncTask`, to get that
+work off the main application thread. These classes are designed
+to work on API Level 5 or higher and as such are not
+`Loader`-aware.
+
+However, you can arrange to do post-CRUD work by extending
+these classes and overriding `onPostExecute(Exception)`:
+
+    new SQLiteInsertTask(db.getWritableDatabase(),
+                         "constants", DatabaseHelper.TITLE,
+                         values) {
+      @Override
+      public void onPostExecute(Exception e) {
+        getLoaderManager().restartLoader(0, null,
+                                         ConstantsBrowser.this);
+      }
+    }.execute();
+
+The `Exception` will be `null` if everything succeeded in
+the background work; otherwise, it will be whatever `Exception`
+was raised by the `insert()` call, etc.
+
+An implementation of `SQLiteUpdateTask` is forthcoming, though
+if you look at the source code to the other task classes, you
+will see there's not much to them at present... :-)
+
+Notes on Threading
+------------------
+`SQLiteDatabase` itself is thread-safe, in that it manages
+a lock to ensure that two operations do not occur in
+parallel. However, that assumes you are using a single
+instance of `SQLiteDatabase`. Hence, if you are using
+`SQLiteCursorLoader` and the other classes in this project
+you will want to make sure that you are using a single
+instance of your `SQLiteDatabase` object. If you have more than
+one component using the database, that `SQLiteDatabase`
+effectively will have to be global in scope, such as by
+holding onto it (or its containing `SQLiteOpenHelper`)
+in a static data member.
+
 Dependencies
 ------------
 This project sometimes depends on the Android Compatibility
@@ -80,8 +126,8 @@ editions of the classes.
 
 Version
 -------
-This is version v0.1 of this module, meaning that it is
-fresh out of the box.
+This is version v0.2 of this module, meaning that it is
+fresh out of the box, but older than yesterday's 0.1.0. :-)
 
 Demo
 ----
@@ -115,6 +161,7 @@ and stack traces if you are encountering crashes.
 
 Release Notes
 -------------
+v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
 v0.1.0: initial release
 
 Who Made This?

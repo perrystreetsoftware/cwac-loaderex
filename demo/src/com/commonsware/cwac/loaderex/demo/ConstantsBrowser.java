@@ -32,6 +32,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import com.commonsware.cwac.loaderex.SQLiteCursorLoader;
+import com.commonsware.cwac.loaderex.SQLiteDeleteTask;
+import com.commonsware.cwac.loaderex.SQLiteInsertTask;
 
 public class ConstantsBrowser extends ListActivity
 implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -174,15 +176,28 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 		values.put(DatabaseHelper.TITLE, wrapper.getTitle());
 		values.put(DatabaseHelper.VALUE, wrapper.getValue());
 		
-		db.getWritableDatabase().insert("constants", DatabaseHelper.TITLE, values);
-		getLoaderManager().restartLoader(0, null, this);
+		new SQLiteInsertTask(db.getWritableDatabase(),
+		                     "constants", DatabaseHelper.TITLE,
+		                     values) {
+		  @Override
+		  public void onPostExecute(Exception unused) {
+		    getLoaderManager().restartLoader(0, null,
+		                                     ConstantsBrowser.this);
+		  }
+		}.execute();
 	}
 	
 	private void processDelete(long rowId) {
 		String[] args={String.valueOf(rowId)};
 		
-		db.getWritableDatabase().delete("constants", "_ID=?", args);
-    getLoaderManager().restartLoader(0, null, this);
+    new SQLiteDeleteTask(db.getWritableDatabase(),
+                         "constants", "_ID=?", args) {
+      @Override
+      public void onPostExecute(Exception unused) {
+        getLoaderManager().restartLoader(0, null,
+                                         ConstantsBrowser.this);
+      }
+    }.execute();
 	}
 	
 	class DialogWrapper {
