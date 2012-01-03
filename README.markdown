@@ -15,7 +15,11 @@ of those gaps. Presently, it provides a `SQLiteCursorLoader`,
 offering the same basic concept as `CursorLoader`, but
 for use with a `SQLiteDatabase` instead of a `ContentProvider`.
 It also supplies some boilerplate `AsyncTasks` to handle
-database inserts and deletes in the background. 
+database inserts and deletes in the background. It also supplies:
+
+- `SharedPreferencesLoader`, for retrieving the default
+`SharedPreferences` object without tying up the main
+application thread.
 
 This is packaged as an Android library project, though a simple
 JAR is also available from the Downloads section of this
@@ -116,23 +120,51 @@ effectively will have to be global in scope, such as by
 holding onto it (or its containing `SQLiteOpenHelper`)
 in a static data member.
 
+Usage: SharedPreferencesLoader
+------------------------------
+`SharedPreferencesLoader` largely mirrors `SQLiteCursorLoader`:
+
+- There are two implementations, one for native API Level 11+
+development (in the base `com.commonsware.cwac.loaderex` package)
+and one for use with the Android Support package (in the
+`com.commonsware.cwac.loaderex.acl` package).
+
+- Your activity should implement the `LoaderManager.LoaderCallbacks<SharedPreferences>`
+interface.
+
+- In your `onCreateLoader()` method, return an instance of
+`SharedPreferencesLoader`, which has a one-parameter constructor
+taking your `Activity` (or other `Context`) as the parameter.
+
+- In your `onLoadFinished()` method, make use of the
+`SharedPreferences` object delivered unto you.
+
+In addition, there is a static `persist()` method that takes
+a `SharedPreferences.Editor` object and arranges to save those
+edits on a background thread, regardless of Android API level.
+
 Dependencies
 ------------
-This project sometimes depends on the Android Compatibility
-Library (ACL). If you are using it in source form as an Android
-library project, you will need the ACL. If you are using the
-JAR, you only need the ACL if you are using the `.acl`
-editions of the classes. 
+This project sometimes depends on the Android Support package
+(formerly the Android Compatibility Library, or ACL). If you
+are using it in source form as an Android
+library project, you will need the Android Support package.
+If you are using the JAR, you only need the Android Support
+package if you are using the `.acl` editions of the classes. 
 
 Version
 -------
-This is version v0.2 of this module, meaning that it is
-fresh out of the box, but older than yesterday's 0.1.0. :-)
+This is version v0.3 of this module, meaning that it is slowly
+aging, like a fine vinegar that one day aspires to be wine.
 
 Demo
 ----
 In the `demo/` sub-project you will find
 a sample activity that demonstrates the use of `SQLiteCursorLoader`.
+There are two implementations of this sample, one for the 
+Android Support package and one for native API Level 11 work.
+There are also sample activities demonstrating the use
+of `SharedPreferencesLoader`.
 
 Note that when you build the JAR via `ant jar`, the sample
 activity is not included, nor any resources -- only the
@@ -144,7 +176,6 @@ Future editions of this project will add things like:
 
  - Support for `query()` in addition to `rawQuery()`-style queries
  - Support for synchronization on the `SQLiteDatabase`
- - Separate task classes for performing other CRUD operations on databases and content providers in background threads
 
 License
 -------
