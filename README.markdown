@@ -154,7 +154,7 @@ package if you are using the `.acl` editions of the classes.
 
 Version
 -------
-This is version v0.3 of this module, meaning that it is slowly
+This is version v0.3.0 of this module, meaning that it is slowly
 aging, like a fine vinegar that one day aspires to be wine.
 
 Demo
@@ -197,6 +197,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+v0.3.0: added `SharedPreferencesLoader`
 v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
 v0.1.0: initial release
 
