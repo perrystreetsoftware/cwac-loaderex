@@ -159,6 +159,11 @@ on [StackOverflow](http://stackoverflow.com/questions/ask) tagged with `commonsw
 what CWAC module you are having issues with, and be sure to include source code 
 and stack traces if you are encountering crashes.
 
+If you have encountered what is clearly a bug, please post an [issue](https://github.com/commonsguy/cwac-loaderex/issues). Be certain to include complete steps
+for reproducing the issue.
+
+Do not ask for help via Twitter.
+
 Release Notes
 -------------
 v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
