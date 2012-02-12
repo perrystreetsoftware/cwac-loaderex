@@ -203,10 +203,10 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
-v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
-v0.3.0: added `SharedPreferencesLoader`
-v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
-v0.1.0: initial release
+- v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
+- v0.3.0: added `SharedPreferencesLoader`
+- v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
+- v0.1.0: initial release
 
 Who Made This?
 --------------
