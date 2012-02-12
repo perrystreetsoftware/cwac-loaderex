@@ -65,6 +65,14 @@ the JAR or library project of `LoaderEx`.
 In your code, you will choose the one you wish to use
 based upon whether you are using the ACL or not.
 
+### Database Modifications
+
+If you use the `insert()`, `update()`, `delete()`, and
+`execSQL()` methods on `SQLiteCursorLoader`, the loader
+framework will automatically update you to reflect a new
+`Cursor` with the changed data. These four methods take
+the same parameters as they do on `SQLiteDatabase`.
+
 ### AbstractCursorLoader
 
 `SQLiteCursorLoader` itself extends an `AbstractCursorLoader`.
@@ -78,6 +86,8 @@ background thread and therefore is not time-limited.
 
 Usage: SQLite*Task
 ------------------
+**THESE CLASSES ARE DEPRECATED**
+
 `SQLiteInsertTask` and `SQLiteDeleteTask` are also supplied
 in this library. These simply perform `insert()` and `delete()`
 calls on a `SQLiteDatabase` inside an `AsyncTask`, to get that
@@ -101,10 +111,6 @@ these classes and overriding `onPostExecute(Exception)`:
 The `Exception` will be `null` if everything succeeded in
 the background work; otherwise, it will be whatever `Exception`
 was raised by the `insert()` call, etc.
-
-An implementation of `SQLiteUpdateTask` is forthcoming, though
-if you look at the source code to the other task classes, you
-will see there's not much to them at present... :-)
 
 Notes on Threading
 ------------------
@@ -154,8 +160,8 @@ package if you are using the `.acl` editions of the classes.
 
 Version
 -------
-This is version v0.3.0 of this module, meaning that it is slowly
-aging, like a fine vinegar that one day aspires to be wine.
+This is version v0.4.0 of this module, meaning that it is not
+completely new, but only mostly new.
 
 Demo
 ----
@@ -197,6 +203,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
 v0.3.0: added `SharedPreferencesLoader`
 v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
 v0.1.0: initial release

@@ -19,6 +19,7 @@ package com.commonsware.cwac.loaderex.acl;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -66,5 +67,101 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
     writer.print(prefix);
     writer.print("args=");
     writer.println(Arrays.toString(args));
+  }
+
+  public void insert(String table, String nullColumnHack,
+                     ContentValues values) {
+    new InsertTask(this).execute(db, table, nullColumnHack, values);
+  }
+
+  public void update(String table, ContentValues values,
+                     String whereClause, String[] whereArgs) {
+    new UpdateTask(this).execute(db, table, values, whereClause,
+                                 whereArgs);
+  }
+
+  public void delete(String table, String whereClause,
+                     String[] whereArgs) {
+    new DeleteTask(this).execute(db, table, whereClause, whereArgs);
+  }
+  
+  public void execSQL (String sql, Object[] bindArgs) {
+    new ExecSQLTask(this).execute(db, sql, bindArgs);
+  }
+
+  private class InsertTask extends
+      ContentChangingTask<Object, Void, Void> {
+    InsertTask(SQLiteCursorLoader loader) {
+      super(loader);
+    }
+
+    @Override
+    protected Void doInBackground(Object... params) {
+      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      String table=(String)params[1];
+      String nullColumnHack=(String)params[2];
+      ContentValues values=(ContentValues)params[3];
+
+      db.insert(table, nullColumnHack, values);
+
+      return(null);
+    }
+  }
+
+  private class UpdateTask extends
+      ContentChangingTask<Object, Void, Void> {
+    UpdateTask(SQLiteCursorLoader loader) {
+      super(loader);
+    }
+
+    @Override
+    protected Void doInBackground(Object... params) {
+      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      String table=(String)params[1];
+      ContentValues values=(ContentValues)params[2];
+      String where=(String)params[3];
+      String[] whereParams=(String[])params[4];
+
+      db.update(table, values, where, whereParams);
+
+      return(null);
+    }
+  }
+
+  private class DeleteTask extends
+      ContentChangingTask<Object, Void, Void> {
+    DeleteTask(SQLiteCursorLoader loader) {
+      super(loader);
+    }
+
+    @Override
+    protected Void doInBackground(Object... params) {
+      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      String table=(String)params[1];
+      String where=(String)params[2];
+      String[] whereParams=(String[])params[3];
+
+      db.delete(table, where, whereParams);
+
+      return(null);
+    }
+  }
+
+  private class ExecSQLTask extends
+      ContentChangingTask<Object, Void, Void> {
+    ExecSQLTask(SQLiteCursorLoader loader) {
+      super(loader);
+    }
+
+    @Override
+    protected Void doInBackground(Object... params) {
+      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      String sql=(String)params[1];
+      Object[] bindParams=(Object[])params[2];
+
+      db.execSQL(sql, bindParams);
+
+      return(null);
+    }
   }
 }

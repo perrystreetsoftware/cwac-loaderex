@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
+@Deprecated
 public class SQLiteInsertTask
   extends AsyncTask<Void, Void, Exception> {
   SQLiteDatabase db;

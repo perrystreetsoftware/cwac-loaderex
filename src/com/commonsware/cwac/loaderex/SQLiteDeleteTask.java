@@ -18,6 +18,7 @@ package com.commonsware.cwac.loaderex;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
+@Deprecated
 public class SQLiteDeleteTask
   extends AsyncTask<Void, Void, Exception> {
   SQLiteDatabase db;
