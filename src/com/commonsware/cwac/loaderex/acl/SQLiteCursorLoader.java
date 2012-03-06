@@ -23,9 +23,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteCursorLoader extends AbstractCursorLoader {
-  SQLiteDatabase db=null;
+  SQLiteOpenHelper db=null;
   String rawQuery=null;
   String[] args=null;
 
@@ -36,7 +37,7 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
    * meaning of the parameters. These will be passed as-is
    * to that call.
    */
-  public SQLiteCursorLoader(Context context, SQLiteDatabase db,
+  public SQLiteCursorLoader(Context context, SQLiteOpenHelper db,
                             String rawQuery, String[] args) {
     super(context);
     this.db=db;
@@ -45,12 +46,12 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
   }
 
   /**
-   * Runs on a worker thread and performs the actual database
-   * query to retrieve the Cursor.
+   * Runs on a worker thread and performs the actual
+   * database query to retrieve the Cursor.
    */
   @Override
   protected Cursor buildCursor() {
-    return(db.rawQuery(rawQuery, args));
+    return(db.getReadableDatabase().rawQuery(rawQuery, args));
   }
 
   /**
@@ -84,8 +85,8 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
                      String[] whereArgs) {
     new DeleteTask(this).execute(db, table, whereClause, whereArgs);
   }
-  
-  public void execSQL (String sql, Object[] bindArgs) {
+
+  public void execSQL(String sql, Object[] bindArgs) {
     new ExecSQLTask(this).execute(db, sql, bindArgs);
   }
 
@@ -97,12 +98,12 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
 
     @Override
     protected Void doInBackground(Object... params) {
-      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      SQLiteOpenHelper db=(SQLiteOpenHelper)params[0];
       String table=(String)params[1];
       String nullColumnHack=(String)params[2];
       ContentValues values=(ContentValues)params[3];
 
-      db.insert(table, nullColumnHack, values);
+      db.getWritableDatabase().insert(table, nullColumnHack, values);
 
       return(null);
     }
@@ -116,13 +117,14 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
 
     @Override
     protected Void doInBackground(Object... params) {
-      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      SQLiteOpenHelper db=(SQLiteOpenHelper)params[0];
       String table=(String)params[1];
       ContentValues values=(ContentValues)params[2];
       String where=(String)params[3];
       String[] whereParams=(String[])params[4];
 
-      db.update(table, values, where, whereParams);
+      db.getWritableDatabase()
+        .update(table, values, where, whereParams);
 
       return(null);
     }
@@ -136,12 +138,12 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
 
     @Override
     protected Void doInBackground(Object... params) {
-      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      SQLiteOpenHelper db=(SQLiteOpenHelper)params[0];
       String table=(String)params[1];
       String where=(String)params[2];
       String[] whereParams=(String[])params[3];
 
-      db.delete(table, where, whereParams);
+      db.getWritableDatabase().delete(table, where, whereParams);
 
       return(null);
     }
@@ -155,11 +157,11 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
 
     @Override
     protected Void doInBackground(Object... params) {
-      SQLiteDatabase db=(SQLiteDatabase)params[0];
+      SQLiteOpenHelper db=(SQLiteOpenHelper)params[0];
       String sql=(String)params[1];
       Object[] bindParams=(Object[])params[2];
 
-      db.execSQL(sql, bindParams);
+      db.getWritableDatabase().execSQL(sql, bindParams);
 
       return(null);
     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2012 -- CommonsWare, LLC
+/* Copyright (c) 2011-2012 -- CommonsWare, LLC
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
 
 package com.commonsware.cwac.loaderex.demo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,10 +31,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import com.commonsware.cwac.loaderex.SQLiteCursorLoader;
 
-public class ConstantsBrowser extends ListActivity implements
+public class ConstantsBrowser extends Activity implements
     LoaderManager.LoaderCallbacks<Cursor> {
   private static final int ADD_ID=Menu.FIRST + 1;
   private static final int DELETE_ID=Menu.FIRST + 3;
@@ -45,6 +47,17 @@ public class ConstantsBrowser extends ListActivity implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+                                                                    .penaltyLog()
+                                                                    .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+                                                            .detectLeakedClosableObjects()
+                                                            .penaltyLog()
+                                                            .penaltyDeath()
+                                                            .build());
+
+    setContentView(R.layout.main);
+
     db=new DatabaseHelper(this);
 
     adapter=
@@ -52,8 +65,10 @@ public class ConstantsBrowser extends ListActivity implements
             DatabaseHelper.TITLE, DatabaseHelper.VALUE }, new int[] {
             R.id.title, R.id.value });
 
-    setListAdapter(adapter);
-    registerForContextMenu(getListView());
+    ListView lv=(ListView)findViewById(R.id.constants);
+
+    lv.setAdapter(adapter);
+    registerForContextMenu(lv);
     getLoaderManager().initLoader(0, null, this);
   }
 
@@ -106,20 +121,18 @@ public class ConstantsBrowser extends ListActivity implements
 
   public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
     loader=
-        new SQLiteCursorLoader(this, db.getReadableDatabase(),
-                               "SELECT _ID, title, value "
-                                   + "FROM constants ORDER BY title",
-                               null);
+        new SQLiteCursorLoader(this, db, "SELECT _ID, title, value "
+            + "FROM constants ORDER BY title", null);
 
     return(loader);
   }
 
   public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-    adapter.swapCursor(cursor);
+    adapter.changeCursor(cursor);
   }
 
   public void onLoaderReset(Loader<Cursor> loader) {
-    adapter.swapCursor(null);
+    adapter.changeCursor(null);
   }
 
   private void add() {
