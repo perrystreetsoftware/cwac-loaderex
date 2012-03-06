@@ -43,9 +43,14 @@ behaves as `CursorLoader` does.
 
 There is only one at this time, taking a `SQLiteDatabase`
 object, plus the same parameters as is used by `rawQuery()`
-on `SQLiteDatabase` &mdash; a `String` with your SQL query
+on `SQLiteOpenHelper` &mdash; a `String` with your SQL query
 and a `String[]` of positional parameter values (to replace
 any `?` you have in your query).
+
+**NOTE**: Version 0.4 and previous of this component took a
+`SQLiteDatabase` as a parameter instead of a `SQLiteOpenHelper`.
+The change was made so that database creation and upgrades can
+occur on the background thread. Apologies for the API change.
 
 ### Packages
 
@@ -160,8 +165,8 @@ package if you are using the `.acl` editions of the classes.
 
 Version
 -------
-This is version v0.4.0 of this module, meaning that it is not
-completely new, but only mostly new.
+This is version v0.5.0 of this module, meaning that it is
+slowly becoming more respectable.
 
 Demo
 ----
@@ -203,6 +208,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+- v0.5.0: switched to taking a `SQLiteOpenHelper` instead of a `SQLiteDatabase`
 - v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
 - v0.3.0: added `SharedPreferencesLoader`
 - v0.2.0: added `SQLiteInsertTask` and `SQLiteDeleteTask`
