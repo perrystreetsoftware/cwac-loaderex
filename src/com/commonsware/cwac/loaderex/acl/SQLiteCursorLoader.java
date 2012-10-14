@@ -81,6 +81,11 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
                                  whereArgs);
   }
 
+  public void replace(String table, String nullColumnHack,
+                      ContentValues values) {
+    new ReplaceTask(this).execute(db, table, nullColumnHack, values);
+  }
+
   public void delete(String table, String whereClause,
                      String[] whereArgs) {
     new DeleteTask(this).execute(db, table, whereClause, whereArgs);
@@ -125,6 +130,25 @@ public class SQLiteCursorLoader extends AbstractCursorLoader {
 
       db.getWritableDatabase()
         .update(table, values, where, whereParams);
+
+      return(null);
+    }
+  }
+
+  private class ReplaceTask extends
+      ContentChangingTask<Object, Void, Void> {
+    ReplaceTask(SQLiteCursorLoader loader) {
+      super(loader);
+    }
+
+    @Override
+    protected Void doInBackground(Object... params) {
+      SQLiteOpenHelper db=(SQLiteOpenHelper)params[0];
+      String table=(String)params[1];
+      String nullColumnHack=(String)params[2];
+      ContentValues values=(ContentValues)params[3];
+
+      db.getWritableDatabase().replace(table, nullColumnHack, values);
 
       return(null);
     }
