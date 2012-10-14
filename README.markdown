@@ -72,10 +72,10 @@ based upon whether you are using the ACL or not.
 
 ### Database Modifications
 
-If you use the `insert()`, `update()`, `delete()`, and
+If you use the `insert()`, `update()`, `delete()`, `replace()`, and
 `execSQL()` methods on `SQLiteCursorLoader`, the loader
 framework will automatically update you to reflect a new
-`Cursor` with the changed data. These four methods take
+`Cursor` with the changed data. These methods take
 the same parameters as they do on `SQLiteDatabase`.
 
 ### AbstractCursorLoader
@@ -165,8 +165,8 @@ package if you are using the `.acl` editions of the classes.
 
 Version
 -------
-This is version v0.5.0 of this module, meaning that it is
-slowly becoming more respectable.
+This is version v0.6.0 of this module, meaning that it is an
+upstanding member of the community, for at least some community.
 
 Demo
 ----
@@ -208,6 +208,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+- v0.6.0: added `replace()` (by request)
 - v0.5.0: switched to taking a `SQLiteOpenHelper` instead of a `SQLiteDatabase`
 - v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
 - v0.3.0: added `SharedPreferencesLoader`
