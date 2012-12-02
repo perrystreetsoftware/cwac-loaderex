@@ -17,6 +17,8 @@ for use with a `SQLiteDatabase` instead of a `ContentProvider`.
 It also supplies some boilerplate `AsyncTasks` to handle
 database inserts and deletes in the background. It also supplies:
 
+- `SQLCipherCursorLoader`, for operations with
+[SQLCipher for Android](http://sqlcipher.net/sqlcipher-for-android/)
 - `SharedPreferencesLoader`, for retrieving the default
 `SharedPreferences` object without tying up the main
 application thread.
@@ -131,6 +133,45 @@ effectively will have to be global in scope, such as by
 holding onto it (or its containing `SQLiteOpenHelper`)
 in a static data member.
 
+Usage: SQLCipherCursorLoader
+----------------------------
+This class works nearly identically to `SQLiteCursorLoader`.
+The biggest difference is that it takes a SQLCipher for Android
+version of `SQLiteDatabase` in its constructor, instead of
+a `SQLiteOpenHelper`. The `SQLiteDatabase` will need to be readable or
+writeable depending on what you are doing with it.
+
+As with `SQLiteCursorLoader`, there are two editions of `SQLCipherCursorLoader`,
+one in `com.commonsware.cwac.loaderex` and one in
+`com.commonsware.cwac.loaderex.acl` &mdash; the latter is for use with the
+Android Support package's version of the `Loader` framework.
+
+Apps using `SQLCipherCursorLoader` will need a full copy
+of SQLCipher for Android in their project for the project to 
+run properly.
+
+Usage: SQLCipherUtils
+---------------------
+There is a `SQLCipherUtils` class in `com.commonsware.cwac.loaderex` with
+a couple of static methods that may be useful to those implementing SQLCipher
+for Android in their projects.
+
+`getDatabaseState()` will return a `SQLCipherUtils.State` enum indicating
+what the state of the database is:
+
+- `DOES_NOT_EXIST`, meaning that we cannot find a database file
+- `UNENCRYPTED`, meaning that we have found a database file and believe
+that it is unencrypted
+- `ENCRYPTED`, meaning that we have found a database file and believe
+that it is encrypted, and
+- `UNKNOWN`, meaning that we do not know what is going on with the database
+
+`getDatabaseState()` takes a `Context` and the name of the database as parameters.
+
+`encrypt()`, given the name of an existing unencrypted database, will replace
+it with an encrypted version, given the supplied `Context`, name of the database,
+and passphrase.
+
 Usage: SharedPreferencesLoader
 ------------------------------
 `SharedPreferencesLoader` largely mirrors `SQLiteCursorLoader`:
@@ -165,8 +206,8 @@ package if you are using the `.acl` editions of the classes.
 
 Version
 -------
-This is version v0.6.0 of this module, meaning that it is an
-upstanding member of the community, for at least some community.
+This is version v0.7.0 of this module, meaning that its author
+really should consider formalizing v1.0.0 before too long...
 
 Demo
 ----
@@ -183,10 +224,8 @@ compiled classes for the actual library are put into the JAR.
 
 Future
 ------
-Future editions of this project will add things like:
-
- - Support for `query()` in addition to `rawQuery()`-style queries
- - Support for synchronization on the `SQLiteDatabase`
+Future editions of this project will add things like
+support for `query()` in addition to `rawQuery()`-style queries
 
 License
 -------
@@ -208,6 +247,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+- v0.7.0: added SQLCipher for Android support
 - v0.6.0: added `replace()` (by request)
 - v0.5.0: switched to taking a `SQLiteOpenHelper` instead of a `SQLiteDatabase`
 - v0.4.0: added `insert()`, `update()`, `delete()`, and `execSQL()`; better on-change support
