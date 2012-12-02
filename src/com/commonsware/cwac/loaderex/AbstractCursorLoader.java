@@ -17,10 +17,13 @@
 
 package com.commonsware.cwac.loaderex;
 
+import android.annotation.TargetApi;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 abstract public class AbstractCursorLoader extends AsyncTaskLoader<Cursor> {
   abstract protected Cursor buildCursor();
   Cursor lastCursor=null;
