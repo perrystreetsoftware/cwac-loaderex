@@ -24,8 +24,7 @@ database inserts and deletes in the background. It also supplies:
 application thread.
 
 This is packaged as an Android library project, though a simple
-JAR is also available from the Downloads section of this
-GitHub repository. If you are working on a native Honeycomb
+JAR [is also available](https://github.com/commonsguy/downloads). If you are working on a native Honeycomb
 application (i.e., not using the Android Compatibility
 Library), please use the JAR &mdash; put it in your project's
 `libs/` directory and, if you are using Eclipse, add it to
