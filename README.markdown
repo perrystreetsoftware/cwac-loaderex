@@ -167,9 +167,9 @@ that it is encrypted, and
 
 `getDatabaseState()` takes a `Context` and the name of the database as parameters.
 
-`encrypt()`, given the name of an existing unencrypted database, will replace
-it with an encrypted version, given the supplied `Context`, name of the database,
-and passphrase.
+`encrypt()` will replace an unencrypted database
+with an encrypted version, given the supplied `Context`, the name of the database,
+and the passphrase to use for encryption.
 
 Usage: SharedPreferencesLoader
 ------------------------------
