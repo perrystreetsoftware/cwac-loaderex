@@ -16,12 +16,14 @@
 
 package com.commonsware.cwac.loaderex;
 
+import android.annotation.TargetApi;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SharedPreferencesLoader extends
     AsyncTaskLoader<SharedPreferences> implements
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -36,7 +38,7 @@ public class SharedPreferencesLoader extends
         public void run() {
           editor.commit();
         }
-      }.run();
+      }.start();
     }
   }
 

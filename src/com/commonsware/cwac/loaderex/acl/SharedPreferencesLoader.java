@@ -18,6 +18,7 @@
 package com.commonsware.cwac.loaderex.acl;
 
 import android.support.v4.content.AsyncTaskLoader;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.preference.PreferenceManager;
 public class SharedPreferencesLoader extends AsyncTaskLoader<SharedPreferences> {
   private SharedPreferences prefs=null;
   
+  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
   public static void persist(final SharedPreferences.Editor editor) {
     if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
       editor.apply();
@@ -35,7 +37,7 @@ public class SharedPreferencesLoader extends AsyncTaskLoader<SharedPreferences> 
         public void run() {
           editor.commit();
         }
-      }.run();
+      }.start();
     }
   }
   
