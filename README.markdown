@@ -208,7 +208,7 @@ that do not work on API Level 7 and are not noted as requiring a higher version.
 
 Version
 -------
-This is version v0.7.0 of this module, meaning that its author
+This is version v0.7.1 of this module, meaning that its author
 really should consider formalizing v1.0.0 before too long...
 
 Demo
@@ -249,6 +249,7 @@ Do not ask for help via Twitter.
 
 Release Notes
 -------------
+- v0.7.1: bug fix
 - v0.7.0: added SQLCipher for Android support
 - v0.6.0: added `replace()` (by request)
 - v0.5.0: switched to taking a `SQLiteOpenHelper` instead of a `SQLiteDatabase`
