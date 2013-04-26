@@ -24,12 +24,10 @@ database inserts and deletes in the background. It also supplies:
 application thread.
 
 This is packaged as an Android library project, though a simple
-JAR is also available from the Downloads section of this
-GitHub repository. If you are working on a native Honeycomb
+JAR [is also available](https://github.com/commonsguy/downloads). If you are working on a native Honeycomb
 application (i.e., not using the Android Compatibility
-Library), please use the JAR &mdash; put it in your project's
-`libs/` directory and, if you are using Eclipse, add it to
-your build path.
+Library), please use the JAR &mdash; putting it in your project's
+`libs/` directory should be sufficient.
 
 Usage: SQLiteCursorLoader
 -------------------------
@@ -168,9 +166,9 @@ that it is encrypted, and
 
 `getDatabaseState()` takes a `Context` and the name of the database as parameters.
 
-`encrypt()`, given the name of an existing unencrypted database, will replace
-it with an encrypted version, given the supplied `Context`, name of the database,
-and passphrase.
+`encrypt()` will replace an unencrypted database
+with an encrypted version, given the supplied `Context`, the name of the database,
+and the passphrase to use for encryption.
 
 Usage: SharedPreferencesLoader
 ------------------------------
@@ -203,6 +201,10 @@ are using it in source form as an Android
 library project, you will need the Android Support package.
 If you are using the JAR, you only need the Android Support
 package if you are using the `.acl` editions of the classes. 
+
+This project should work on API Level 7 and higher, except for any portions that
+may be noted otherwise in this document. Please report bugs if you find features
+that do not work on API Level 7 and are not noted as requiring a higher version.
 
 Version
 -------
